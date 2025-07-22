@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 use anchor_spl::{associated_token::AssociatedToken, token::{Mint, Token, TokenAccount}};
 
-use crate::state::PoolState;
+use crate::{state::PoolState, error::ErrorCode};
 
 #[derive(Accounts)]
 #[instruction(seed: u64)]
@@ -41,6 +41,7 @@ pub struct Initialize<'info> {
     seeds = [b"pool_state",seed.to_le_bytes().as_ref()],
     bump,
     space = 8 + PoolState::INIT_SPACE,  
+    constraint = mint_x.key() < mint_y.key() @ ErrorCode::InvalidMint
   )]
   pub pool_state: Account<'info, PoolState>,
 
@@ -52,7 +53,7 @@ pub struct Initialize<'info> {
 }
 
 impl<'info> Initialize<'info> {
-  pub fn initialize(&mut self, seed: u64, fee: u16, authority: Option<Pubkey>, bumps: InitializeBumps) {
+  pub fn initialize(&mut self, seed: u64, fee: u16, authority: Option<Pubkey>, bumps: InitializeBumps) -> Result<()> {
     self.pool_state.set_inner(
       PoolState {
         seed,
@@ -60,11 +61,12 @@ impl<'info> Initialize<'info> {
         fee,
         mint_x: self.mint_x.key(),
         mint_y: self.mint_y.key(),
-        mint_lp: self.mint_lp.key(),
         locked: false,
-        bump_pool_state: bumps.pool_state,
+        bump: bumps.pool_state,
         bump_mint_lp: bumps.mint_lp,
       }
-    )
+    );
+
+    Ok(())
   }
 }
