@@ -4,6 +4,8 @@ use anchor_lang::prelude::*;
 pub enum ErrorCode {
     #[msg("Deposit Failed")]
     DepositToPoolFailed,
+    #[msg("Pool Not Found")]
+    PoolNotFound,
     #[msg("Pool Locked")]
     PoolLocked,
     #[msg("InvalidDepositAmount")]
@@ -12,4 +14,10 @@ pub enum ErrorCode {
     InvalidMint,
     #[msg("Depositing too little liquidity")]
     DepositTooSmall,
+    #[msg("Output is below the minimum expected")]
+    OutputTooSmall,
+    #[msg("SwapInFailed")]
+    SwapInFailed,
+    #[msg("SwapOutFailed")]
+    SwapOutFailed,
 }

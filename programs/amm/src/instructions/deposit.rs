@@ -1,6 +1,5 @@
 use anchor_lang::prelude::*;
-use anchor_spl::{associated_token::AssociatedToken, token::{Transfer, transfer, Mint, Token, TokenAccount, MintTo, mint_to}};
-use constant_product_curve::ConstantProduct;
+use anchor_spl::{associated_token::AssociatedToken, token::{Mint, Token, TokenAccount, MintTo, mint_to}};
 use fixed::types::I64F64;
 
 use super::shared::{transfer_tokens};
